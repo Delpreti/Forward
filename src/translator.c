@@ -15,6 +15,16 @@ void wNamespace(FILE *arq){
 	fprintf(arq, "using namespace std;\n\n");
 }
 
+// Funcao para ajustar a identacao
+void ident(FILE *arq, int nivel){
+	if(nivel <= 0){
+		return;
+	}
+	for(int i = 0; i < nivel; i++){
+		fprintf(arq, "	");
+	}
+}
+
 void viewTree(tnode *no, int nivel){
 
 	printf("%s, nivel %d\n", no->name, nivel);
@@ -22,6 +32,28 @@ void viewTree(tnode *no, int nivel){
 	for(int i = 0; i < no->sIndex; i++){
 
 		viewTree(no->slave[i], nivel + 1);
+	}
+
+	if(no->type != TINIT){
+		no = no->master;
+	}
+}
+
+void readTree(tnode *no, int nivel, FILE *arq){
+
+	if(no->type == TOBJECT){
+		ident(arq, nivel - 1);
+		fprintf(arq, "class %s {\n", no->name);
+	}
+
+	for(int i = 0; i < no->sIndex; i++){
+
+		readTree(no->slave[i], nivel + 1, arq);
+	}
+
+	if(no->type == TOBJECT){
+		ident(arq, nivel - 1);
+		fprintf(arq, "}\n");
 	}
 
 	if(no->type != TINIT){
@@ -44,7 +76,7 @@ void buildProgram(tnode *inicio){
 	int level = 0; // Level eh um indicativo de quantos niveis ha na arvore
 	viewTree(inicio, level);
 
-
+	readTree(inicio, level, output);
 
 	fclose(output);
 }

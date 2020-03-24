@@ -1,1 +1,1 @@
-{teste {go {cacete}}}{bam {bu}}
+{{sera} que {funciona}}

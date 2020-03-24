@@ -1,2 +1,2 @@
 # Forward
-A long-term project which goal is to translate natural language into a programming language.
+A long-term project with the goal to translate natural language into a programming language.

@@ -54,7 +54,7 @@ int main() {
        	if(c == '{'){
 			tnode *next = new_tnode(TOBJECT, NULL, atual);
 
-			// Magia Negra, acho que nao esta funcionando direito isso nao
+			// Magia Negra
 			if(atual->slave == NULL){
 				atual->slave = malloc(sizeof(*(atual->slave)));
 			}
