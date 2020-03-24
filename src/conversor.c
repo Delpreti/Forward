@@ -97,6 +97,5 @@ int main() {
 	buildProgram(raiz);
 
 	// Encerramento do programa
-	clearTree(raiz);
 	return 0;
 }

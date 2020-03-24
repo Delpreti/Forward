@@ -18,4 +18,6 @@ typedef struct tnode{
 
 void err_check(FILE *arq);
 
+void clearTree(tnode* no);
+
 #endif

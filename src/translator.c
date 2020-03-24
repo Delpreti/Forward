@@ -39,44 +39,78 @@ void viewTree(tnode *no, int nivel){
 	}
 }
 
-void readTree(tnode *no, int nivel, FILE *arq){
-
-	if(no->type == TOBJECT){
-		ident(arq, nivel - 1);
-		fprintf(arq, "class %s {\n", no->name);
-	}
-
-	for(int i = 0; i < no->sIndex; i++){
-
-		readTree(no->slave[i], nivel + 1, arq);
-	}
-
-	if(no->type == TOBJECT){
-		ident(arq, nivel - 1);
-		fprintf(arq, "}\n");
-	}
-
-	if(no->type != TINIT){
-		no = no->master;
-	}
-}
-
 void buildProgram(tnode *inicio){
-	// Abertura do arquivo de saida
-	FILE *output = fopen("program.cpp","w");
-	err_check(output);
+
+	// Partes da arvore Influenciam em partes distintas do codigo. Como resultado disso,
+	// eh necessario escrever em diferentes posicoes do arquivo ao longo da arvore.
+	// Para conseguir isto, abrimos 3 arquivos temporarios
+
+	FILE *t_head = fopen("temphead.cpp","w+");
+	err_check(t_head);
+
+	FILE *t_class = fopen("tempclass.cpp","w+");
+	err_check(t_class);
+
+	FILE *t_main = fopen("tempmain.cpp","w+");
+	err_check(t_main);
 
 	tnode* current = inicio;
 
 	if(current->type == TINIT){
-		wLibrary(output);
-		wNamespace(output);
+		wLibrary(t_head);
+		wNamespace(t_head);
+	}
+
+	// Essa funcao esta aqui dentro para nao ter que passar o nome do arquivo como parametro infinitas vezes
+	void readTree(tnode *no, int nivel){
+
+		if(no->type == TOBJECT){
+			ident(t_class, nivel - 1);
+			fprintf(t_class, "class %s {\n", no->name);
+		}
+
+		for(int i = 0; i < no->sIndex; i++){
+
+			readTree(no->slave[i], nivel + 1);
+		}
+
+		if(no->type == TOBJECT){
+			ident(t_class, nivel - 1);
+			fprintf(t_class, "}\n");
+		}
+
+		if(no->type != TINIT){
+			no = no->master;
+		}
 	}
 
 	int level = 0; // Level eh um indicativo de quantos niveis ha na arvore
 	viewTree(inicio, level);
 
-	readTree(inicio, level, output);
+	readTree(inicio, level);
+	
+	clearTree(inicio);
+
+	// Abertura do arquivo de saida
+	FILE *output = fopen("program.cpp","w");
+	err_check(output);
+
+	void saveDismiss(FILE *arq){
+		rewind(arq);
+		char c;
+		while ((c = fgetc(arq)) != EOF) { // standard C I/O file reading loop
+	       fprintf(output, "%c", c);
+	    }
+	    fclose(arq);
+	}
+
+	saveDismiss(t_head);
+	saveDismiss(t_class);
+	saveDismiss(t_main);
+
+	remove("temphead.cpp");
+	remove("tempclass.cpp");
+	remove("tempmain.cpp");
 
 	fclose(output);
 }
