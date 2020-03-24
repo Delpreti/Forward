@@ -20,8 +20,8 @@ tnode *new_tnode(int tipo, char* nome, tnode *mestre){
 }
 
 // Funcao que verifica se houve erro na abertura do arquivo
-void err_check(FILE *fp) {
-	if (fp == NULL) {
+void err_check(FILE *arq) {
+	if (arq == NULL) {
        fprintf(stderr, "error opening file\n");
        exit(1);
 	}
@@ -54,8 +54,10 @@ int main() {
        	if(c == '{'){
 			tnode *next = new_tnode(TOBJECT, NULL, atual);
 
-			// Magia Negra
-			atual->slave = malloc(sizeof(tnode*));
+			// Magia Negra, acho que nao esta funcionando direito isso nao
+			if(atual->slave == NULL){
+				atual->slave = malloc(sizeof(*(atual->slave)));
+			}
 			atual->slave[atual->sIndex] = next;
 
 			atual->sIndex += 1;
@@ -65,6 +67,12 @@ int main() {
 
 		if(atual->type == TOBJECT && c == '}'){
 			atual = atual->master;
+			continue;
+		}
+
+		// Um espaco nao tem significado
+		if(c == ' '){
+			continue;
 		}
 
 		// Se nao eh um caracter de escopo, eh algum nome

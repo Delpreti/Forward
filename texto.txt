@@ -1,1 +1,1 @@
-{teste}
+{teste {go {cacete}}}{bam {bu}}

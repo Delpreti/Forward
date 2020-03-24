@@ -16,6 +16,6 @@ typedef struct tnode{
 	struct tnode *master;
 }tnode;
 
-void err_check(FILE *fp);
+void err_check(FILE *arq);
 
 #endif
