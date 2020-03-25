@@ -4,5 +4,7 @@ using namespace std;
 
 	class sera {
 	}
+
 	class funciona {
 	}
+

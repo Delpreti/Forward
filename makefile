@@ -4,4 +4,4 @@ SRC = $(wildcard $(SRC_DIR)/*.c)
 CFLAGS = -Wall
 
 out: $(SRC)
-	$(CC) $(SRC) -o conv $(CFLAGS) 
+	$(CC) -o conv $(SRC) $(CFLAGS) 

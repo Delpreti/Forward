@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "translator.h"
+#include "filemanager.h"
 
 // Convencao: variaveis em ingles, parametros de funcao em portugues
 

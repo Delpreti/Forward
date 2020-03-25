@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "conversor.h"
+#include "filemanager.h"
 
 void inherit(tnode *no){
 	// Este no recebe 2 objetos como parametros,
@@ -29,8 +30,12 @@ void display(tnode *no){
 	// O comportamento padrao eh concatenar todos os slave->name (recursivamente)
 	// E depois jogar tudo num printf().
 	// Se houver um valor numerico [(), sera exibido o valor/resultado ao inves do name.
-	if(no->sIndex = 0){
+	if(no->sIndex == 0){
 		printf("Warning: nada a ser exibido por #()\n");
 		return;
 	}
+}
+
+void callFunction(tnode *no, int nivel){
+	// Chama a funcao adequada, a ser implementado
 }
