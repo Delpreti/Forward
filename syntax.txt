@@ -1,0 +1,21 @@
+Forward
+current version 0.0.2 - at the point of this writing, some of these features may not be implemented yet (and still, are subject to change).
+
+The syntax for comprhensible text is supposed to be simple, but might get complicated as new features emerge.
+
+Basically, you write a prefix + parentheses, and inside them you put the word you want to. For example {(John) means I am telling the program that John is an object. You can also put things inside each other like this:
+
+/( {(John) is {(human) )
+
+the above example means the object John will inherit from the object human, which are parameters to the "function" is. I call it a function because I couldn't come up with a better name so far.
+
+So basically you wrap stuff together like that and the program is delivered to you. Pretty neat, right?
+
+Anyways, without further ado, the syntax: (aka the prefixes you should know)
+
+{ - object
+/ - function
+* - Array (aka pointer)
+" - Quotes (aka strings)
+[ - Numerical values (there is type inference)
+# - Things that should be displayed to the user at the final program.

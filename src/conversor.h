@@ -1,7 +1,7 @@
 #ifndef CONVERSOR_HEADER
 #define CONVERSOR_HEADER
 
-enum{TINIT, TOBJECT, TFUNCTION, TQUOTE, TINT, TDOUBLE};
+enum{TINIT, TOBJECT, TFUNCTION, TQUOTE, TINT, TDOUBLE, TERROR};
 
 // Arvore do programa definida com nodes que guardam referencia entre si.
 typedef struct tnode{

@@ -37,6 +37,15 @@ void clearTree(tnode* no){
 	free(no);
 }
 
+// Funcao que traduz os simbolos dos brackets para os tipos de nodes da arvore
+int defType(char t){
+	switch(t){
+		case '{' : return TOBJECT;
+		case '/' : return TFUNCTION;
+		default : printf("erro de tipo nao existente\n"); return TERROR;
+	}
+}
+
 int main() {
 
 	// Abertura do arquivo de entrada (talvez deveria ser passado como parametro na main)
@@ -48,11 +57,16 @@ int main() {
 	tnode *atual = raiz;
 
 	// Vai lendo e montando a arvore do programa
+	int open = 0;
+	int close = 0;
 	int c; // nota: int para lidar com o EOF
     while ((c = fgetc(input)) != EOF) {
 
-       	if(c == '{'){
-			tnode *next = new_tnode(TOBJECT, NULL, atual);
+       	if(c == '{' || c == '/'){ // Provavelmente eu deveria comparar isso usando regex
+			tnode *next = new_tnode(defType(c), NULL, atual);
+
+			open++;
+			c = fgetc(input);
 
 			// Magia Negra
 			if(atual->slave == NULL){
@@ -65,7 +79,8 @@ int main() {
 			continue;
 		}
 
-		if(atual->type == TOBJECT && c == '}'){
+		if(c == ')'){
+			close++;
 			atual = atual->master;
 			continue;
 		}
@@ -81,7 +96,7 @@ int main() {
 		for(int i = 1; i < 20; i++){
 			
 			c = fgetc(input);
-			if(c == ' ' || c == '}'){
+			if(c == ' ' || c == ')'){
 				palavra[i] = '\0';
 				break;
 			}
@@ -92,6 +107,12 @@ int main() {
     }
 
     fclose(input);
+
+    if(open != close){
+    	printf("erro no arquivo de entrada. %d abertos e %d fechados\n", open, close);
+    	clearTree(raiz);
+    	return 1;
+    }
 
 	// Escrever arvore no arquivo de saida
 	buildProgram(raiz);

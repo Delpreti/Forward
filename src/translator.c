@@ -39,6 +39,10 @@ void viewTree(tnode *no, int nivel){
 	}
 }
 
+void callFunction(char* nomeFunc){
+	// Chama a funcao adequada
+}
+
 void buildProgram(tnode *inicio){
 
 	// Partes da arvore Influenciam em partes distintas do codigo. Como resultado disso,
@@ -64,6 +68,10 @@ void buildProgram(tnode *inicio){
 	// Essa funcao esta aqui dentro para nao ter que passar o nome do arquivo como parametro infinitas vezes
 	void readTree(tnode *no, int nivel){
 
+		if(no->type == TFUNCTION){
+			callFunction(no->name);
+		}
+
 		if(no->type == TOBJECT){
 			ident(t_class, nivel - 1);
 			fprintf(t_class, "class %s {\n", no->name);
@@ -76,7 +84,7 @@ void buildProgram(tnode *inicio){
 
 		if(no->type == TOBJECT){
 			ident(t_class, nivel - 1);
-			fprintf(t_class, "}\n");
+			fprintf(t_class, "}\n\n");
 		}
 
 		if(no->type != TINIT){
@@ -85,7 +93,8 @@ void buildProgram(tnode *inicio){
 	}
 
 	int level = 0; // Level eh um indicativo de quantos niveis ha na arvore
-	viewTree(inicio, level);
+
+	viewTree(inicio, level); // Remover quando eu estiver confiante de que o programa funciona
 
 	readTree(inicio, level);
 	
@@ -95,10 +104,11 @@ void buildProgram(tnode *inicio){
 	FILE *output = fopen("program.cpp","w");
 	err_check(output);
 
+	// Funcao que copia o conteudo dos arquivos temporarios para o arquivo de saida, e fecha o arquivo temporario
 	void saveDismiss(FILE *arq){
 		rewind(arq);
 		char c;
-		while ((c = fgetc(arq)) != EOF) { // standard C I/O file reading loop
+		while ((c = fgetc(arq)) != EOF) {
 	       fprintf(output, "%c", c);
 	    }
 	    fclose(arq);
