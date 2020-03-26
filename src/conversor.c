@@ -42,6 +42,8 @@ int defType(char t){
 	switch(t){
 		case '{' : return TOBJECT;
 		case '/' : return TFUNCTION;
+		case '#' : return TDISPLAY;
+		case '"' : return TQUOTE;
 		default : printf("erro de tipo nao existente\n"); return TERROR;
 	}
 }
@@ -62,8 +64,8 @@ int main() {
 	int c; // nota: int para lidar com o EOF
     while ((c = fgetc(input)) != EOF) {
 
-       	if(c == '{' || c == '/'){ // Provavelmente eu deveria comparar isso usando regex
-			tnode *next = new_tnode(defType(c), NULL, atual);
+       	if(c == '{' || c == '/' || c == '#' || c == '"'){ // Provavelmente eu deveria comparar isso usando regex
+			tnode *next = new_tnode(defType(c), "\0", atual);
 
 			open++;
 			c = fgetc(input);
@@ -91,10 +93,16 @@ int main() {
 		}
 
 		// Se nao eh um caracter de escopo, eh algum nome
+		// A leitura desse nome eh feita concatenando a string
 		char* palavra = malloc(20*sizeof(char));
-		palavra[0] = c;
-		for(int i = 1; i < 20; i++){
-			
+		int i = 0;
+		for(i = 0; (i < 20) && (atual->name[i] != '\0'); i++){
+			palavra[i] = atual->name[i];
+		}
+		palavra[i] = c;
+		while(i < 20){
+			i++;
+
 			c = fgetc(input);
 			if(c == ' ' || c == ')'){
 				palavra[i] = '\0';
@@ -104,6 +112,9 @@ int main() {
 		}
 		atual->name = palavra;
 		ungetc(c, input);
+
+
+
     }
 
     fclose(input);

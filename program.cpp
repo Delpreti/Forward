@@ -2,9 +2,9 @@
 
 using namespace std;
 
-	class sera {
+	class John {
 	}
 
-	class funciona {
-	}
-
+int main(){
+	printf("John cool ");
+}

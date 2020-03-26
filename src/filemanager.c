@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "conversor.h"
+#include "funcoes.h"
 
 // Partes da arvore Influenciam em partes distintas do codigo. Como resultado disso,
 // eh necessario escrever em diferentes posicoes do arquivo ao longo da arvore.
@@ -22,8 +23,6 @@ void viewTree(tnode *no, int nivel){
 		no = no->master;
 	}
 }
-
-#include "funcoes.h"
 
 void createTempFiles(){
 	FILE *t_head = fopen("temphead.cpp","w");
@@ -79,7 +78,7 @@ void identClass(int nivel){
 }
 
 void writeMain(char* string){
-	FILE *t_main = fopen("tempclass.cpp","a");
+	FILE *t_main = fopen("tempmain.cpp","a");
 	err_check(t_main);
 
 	fprintf(t_main, "%s", string);
@@ -114,30 +113,57 @@ void wNamespace(){
 	writeHead("using namespace std;\n\n");
 }
 
+void wMainStart(){
+	writeMain("int main(){\n");
+}
+
+void wMainEnd(){
+	writeMain("}");
+}
+
 void readTree(tnode *no, int nivel){
+
+	if(no->type == TINIT){ // This will execute once
+		wLibrary();
+		wMainStart();
+	}
 
 	if(no->type == TFUNCTION){
 		callFunction(no, nivel);
 	}
 
-	if(no->type == TOBJECT){
+	if(no->type == TOBJECT){ //Badly written standard behaviour
 		identClass(nivel - 1);
 		writeClass("class ");
 		writeClass(no->name);
 		writeClass(" {\n");
 	}
 
-	for(int i = 0; i < no->sIndex; i++){
+	if(no->type == TDISPLAY){ //Badly written standard behaviour
+		identMain(nivel);
+		writeMain("printf(\"");
+		for(int i = 0; i < no->sIndex; i++){
+			writeMain(no->slave[i]->name);
+			writeMain(" ");
+		}
+		writeMain("\");\n");
+	}
 
+	for(int i = 0; i < no->sIndex; i++){ // The recursive loop for going deeper into the tree
 		readTree(no->slave[i], nivel + 1);
 	}
 
-	if(no->type == TOBJECT){
+	if(no->type == TOBJECT){ //Badly written standard behaviour
 		identClass(nivel - 1);
 		writeClass("}\n\n");
 	}
 
-	if(no->type != TINIT){
+	if(no->type == TINIT){ // This will execute once
+		wNamespace();
+		wMainEnd();
+	}
+
+	if(no->type != TINIT){ // must remain last inside this function
 		no = no->master;
 	}
 }
@@ -146,19 +172,10 @@ void buildProgram(tnode *inicio){
 
 	createTempFiles();
 
-	tnode* current = inicio;
-
-	if(current->type == TINIT){
-		wLibrary();
-		wNamespace();
-	}
-
+	// Realiza a leitura da arvore, escreve nos arquivos temporarios e destroi a arvore.
 	int level = 0; // Level eh um indicativo de quantos niveis ha na arvore
-
 	viewTree(inicio, level); // Remover quando eu estiver confiante de que o programa funciona
-
 	readTree(inicio, level);
-	
 	clearTree(inicio);
 
 	// Abertura do arquivo de saida
@@ -174,7 +191,7 @@ void buildProgram(tnode *inicio){
 	FILE *t_main = fopen("tempmain.cpp","r");
 	err_check(t_main);
 
-	// Funcao que copia o conteudo dos arquivos temporarios para o arquivo de saida, e fecha o arquivo temporario
+	// Funcao que copia o conteudo do arquivo temporario para o arquivo de saida, e fecha o arquivo temporario.
 	void saveDismiss(FILE *arq){
 		char c;
 		while ((c = fgetc(arq)) != EOF) {
