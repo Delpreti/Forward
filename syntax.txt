@@ -15,7 +15,7 @@ Anyways, without further ado, the syntax: (aka the prefixes you should know)
 
 { - object
 / - function
-* - Array (aka pointer)
 " - Quotes (aka strings)
-[ - Numerical values (there is type inference)
 # - Things that should be displayed to the user at the final program.
+[ - Array (or maybe pointer)
+% - Numerical values (there is type inference)

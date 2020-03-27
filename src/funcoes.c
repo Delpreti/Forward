@@ -74,6 +74,11 @@ void set(tnode *no){
 	}
 }
 
+void and(tnode *no){
+	// Recebe uma quantidade variavel de parametros
+	// Funcao depende do contexto.
+}
+
 void multiply();
 
 void sum();
@@ -100,4 +105,23 @@ void callFunction(tnode *no, int nivel){
 	if(strcmp(no->name, "setto") == 0){
 		set(no);
 	}
+
+	if(strcmp(no->name, "and") == 0){
+		and(no);
+	}
+
+	// Operacoes basicas
+	if(strcmp(no->name, "+") == 0){
+		sum(no);
+	}
+	if(strcmp(no->name, "-") == 0){
+		subtract(no);
+	}
+	if(strcmp(no->name, "*") == 0){
+		multiply(no);
+	}
+	if(strcmp(no->name, "-") == 0){
+		divide(no);
+	}
+
 }
