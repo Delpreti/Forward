@@ -23,12 +23,12 @@ void inherit(tnode *no){
 
 }
 
-void is_true(){
+void is_true(tnode *no){
 	// Este no recebe 2 objetos como parametros
 	// O segundo eh o nome de uma variavel private do primeiro(objeto), que sera setada para true.
 }
 
-void is_false(){
+void is_false(tnode *no){
 	// Este no recebe 2 objetos como parametros
 	// O segundo eh o nome de uma variavel private do primeiro(objeto), que sera setada para false.
 }
@@ -79,49 +79,25 @@ void and(tnode *no){
 	// Funcao depende do contexto.
 }
 
-void multiply();
+void multiply(tnode *no);
 
-void sum();
+void sum(tnode *no);
 
-void subtract();
+void subtract(tnode *no);
 
-void divide();
+void divide(tnode *no);
 
+
+// As funções definidas acima precisam ser registradas para uso, alterando as 3 proximas linhas
+char* funcoes[] = {"is", "isnot", "eachin", "setto", "and", "+", "-", "*", "/"};
+void (*chamador[]) (tnode *no) = {&is, &is_false, &each, &set, &and, &sum, &subtract, &multiply, &divide}
+const int quant = 9
+
+// Chamador generico
 void callFunction(tnode *no, int nivel){
-	// Chama a funcao adequada, a ser implementado
-
-	if(strcmp(no->name, "is") == 0){
-		is(no);
+	for(int i = 0; i < quant; i++){
+		if(strcmp(no->name, funcoes[i]) == 0){
+			(*chamador[i]) (no);
+		}
 	}
-
-	if(strcmp(no->name, "isnot") == 0){
-		is_false(no);
-	}
-
-	if(strcmp(no->name, "eachin") == 0){
-		each(no);
-	}
-
-	if(strcmp(no->name, "setto") == 0){
-		set(no);
-	}
-
-	if(strcmp(no->name, "and") == 0){
-		and(no);
-	}
-
-	// Operacoes basicas
-	if(strcmp(no->name, "+") == 0){
-		sum(no);
-	}
-	if(strcmp(no->name, "-") == 0){
-		subtract(no);
-	}
-	if(strcmp(no->name, "*") == 0){
-		multiply(no);
-	}
-	if(strcmp(no->name, "-") == 0){
-		divide(no);
-	}
-
 }

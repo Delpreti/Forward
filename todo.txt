@@ -9,3 +9,5 @@
 - Permitir ao usuario escrever codigo diretamente no arquivo txt, o qual sera simplesmente copiado e colado no arquivo de saida. Talvez precise de mais um arquivo temporario para isso.
 
 - Encontrar uma solução melhor do que o uso de arquivos temporarios para guardar as informacoes na ordem certa.
+
+- Usar C++ ao invés de C.

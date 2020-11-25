@@ -20,7 +20,7 @@ tnode *new_tnode(int tipo, char* nome, tnode *mestre){
 }
 
 // Funcao que verifica se houve erro na abertura do arquivo
-void err_check(FILE *arq) {
+void err_check(FILE *arq){
 	if (arq == NULL) {
        fprintf(stderr, "error opening file\n");
        exit(1);
@@ -48,7 +48,7 @@ int defType(char t){
 	}
 }
 
-int main() {
+int main(){
 
 	// Abertura do arquivo de entrada (talvez deveria ser passado como parametro na main)
 	FILE *input = fopen("texto.txt","r");
@@ -58,10 +58,13 @@ int main() {
 	tnode *raiz = new_tnode(TINIT, "root", NULL);
 	tnode *atual = raiz;
 
-	// Vai lendo e montando a arvore do programa
+	// Valores que servem para identificar erros de sintaxe (excesso/falta de parenteses)
 	int open = 0;
 	int close = 0;
+
 	int c; // nota: int para lidar com o EOF
+
+	// Loop principal que faz a leitura do arquivo de entrada e monta a arvore do programa
     while ((c = fgetc(input)) != EOF) {
 
        	if(c == '{' || c == '/' || c == '#' || c == '"'){ // Provavelmente eu deveria comparar isso usando regex
@@ -113,12 +116,11 @@ int main() {
 		atual->name = palavra;
 		ungetc(c, input);
 
-
-
     }
 
     fclose(input);
 
+    // Verificação de erro de sintaxe (excesso/falta de parenteses)
     if(open != close){
     	printf("erro no arquivo de entrada. %d abertos e %d fechados\n", open, close);
     	clearTree(raiz);
